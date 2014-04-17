@@ -2,7 +2,8 @@
 
 ## Description
 
-`godist` is a distributed worker library for the Go language.
+`godist` is a distributed worker library for the
+[Go](http://golang.org/) language.
 
 ## Implementation
 
