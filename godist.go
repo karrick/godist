@@ -45,3 +45,10 @@ type Task interface {
 	Perform() error
 	Integrate() Job
 }
+
+// Workflow interface allows different implementations of a workflow.
+type Workflow interface {
+	SubmitWithCallback(Job, func())
+	SubmitAndWait(Job)
+	Quit()
+}

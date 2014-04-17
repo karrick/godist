@@ -5,15 +5,17 @@ import (
 	"testing"
 )
 
+////////////////////////////////////////////////////////////////
+
 func TestSillyJobParse(t *testing.T) {
-	dj := NewSillyJob(nil, nil)
+	dj := newSillyJob(1, 2, nil)
 	if err := dj.Parse(); err != nil {
 		t.Errorf("Expected: %#v; Actual: %#v\n", nil, err)
 	}
 }
 
 func TestSillyJobExpand(t *testing.T) {
-	job := NewSillyJob(nil, nil)
+	job := newSillyJob(3, 4, nil)
 	job.debug = true
 	job.Parse()
 
@@ -26,16 +28,16 @@ func TestSillyJobExpand(t *testing.T) {
 	if len(tasks) != 2 {
 		t.Errorf("Expected: %#v; Actual: %#v\n", 2, len(tasks))
 	}
-	if tasks[0].(*sillyTask).a != 1 {
-		t.Errorf("Expected: %#v; Actual: %#v\n", 1, tasks[0].(*sillyTask).a)
+	if tasks[0].(*sillyTask).a != 3 {
+		t.Errorf("Expected: %#v; Actual: %#v\n", 3, tasks[0].(*sillyTask).a)
 	}
-	if tasks[0].(*sillyTask).b != 20 {
-		t.Errorf("Expected: %#v; Actual: %#v\n", 20, tasks[0].(*sillyTask).b)
+	if tasks[0].(*sillyTask).b != 4 {
+		t.Errorf("Expected: %#v; Actual: %#v\n", 4, tasks[0].(*sillyTask).b)
 	}
 }
 
 func TestSillyJobIntegrate(t *testing.T) {
-	job := NewSillyJob(nil, nil)
+	job := newSillyJob(5, 6, nil)
 
 	t1 := sillyTask{job: job, c: 13}
 	t1.Integrate()
@@ -49,7 +51,7 @@ func TestSillyJobIntegrate(t *testing.T) {
 
 func TestSillyJobWriteTo(t *testing.T) {
 	var buf bytes.Buffer
-	job := NewSillyJob(&buf, nil)
+	job := newSillyJob(7, 8, &buf)
 	job.response = 55
 
 	go func() {
@@ -78,15 +80,15 @@ func TestSillyTaskPerform(t *testing.T) {
 
 func TestSillyWorkflow(t *testing.T) {
 	var buf bytes.Buffer
-	job := NewSillyJob(&buf, nil)
+	job := newSillyJob(7, 8, &buf)
 	job.Parse()
 	tasks, _ := job.Expand()
 	for _, task := range tasks {
 		task.Perform()
 		task.Integrate()
 	}
-	if job.response != 4321 {
-		t.Errorf("Expected: %#v; Actual: %#v\n", 4321, job.response)
+	if job.response != 4315 {
+		t.Errorf("Expected: %#v; Actual: %#v\n", 4315, job.response)
 	}
 
 	go func() {
@@ -99,7 +101,7 @@ func TestSillyWorkflow(t *testing.T) {
 	if n != 4 {
 		t.Errorf("Expected: %#v; Actual: %#v\n", 4, n)
 	}
-	if buf.String() != "4321" {
-		t.Errorf("Expected: %#v; Actual: %#v\n", "4321", buf.String())
+	if buf.String() != "4315" {
+		t.Errorf("Expected: %#v; Actual: %#v\n", "4315", buf.String())
 	}
 }

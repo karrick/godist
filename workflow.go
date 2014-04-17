@@ -2,14 +2,14 @@ package godist
 
 // Workflow is data structure which allows Job structures to be
 // submitted.
-type Workflow struct {
+type workflow struct {
 	done  chan bool
 	queue chan Job
 }
 
-// NewWorkflow creates a Workflow data structure, with 'count' number
+// NewBasicWorkflow creates a Workflow data structure, with 'count' number
 // of go routines for each phase of Job processing.
-func NewWorkflow(count int) *Workflow {
+func NewBasicWorkflow(count int) *workflow {
 	toParse := make(chan Job)
 	toExpand := make(chan Job)
 	toPerform := make(chan Task)
@@ -17,7 +17,7 @@ func NewWorkflow(count int) *Workflow {
 	toRespond := make(chan Job)
 	done := make(chan bool)
 
-	self := &Workflow{
+	self := &workflow{
 		queue: toParse,
 		done:  done,
 	}
@@ -126,7 +126,7 @@ func NewWorkflow(count int) *Workflow {
 
 // SubmitWithCallback asynchronously sends a Job to the workflow, and
 // calls back the given anonymous function when the Job is completed.
-func (self *Workflow) SubmitWithCallback(job Job, fn func()) {
+func (self *workflow) SubmitWithCallback(job Job, fn func()) {
 	self.queue <- job
 	go func() {
 		job.Wait()
@@ -136,14 +136,14 @@ func (self *Workflow) SubmitWithCallback(job Job, fn func()) {
 
 // SubmitAndWait synchronously sends a Job to the workflow, and waits
 // until the job is complete prior to returning to the caller
-func (self *Workflow) SubmitAndWait(job Job) {
+func (self *workflow) SubmitAndWait(job Job) {
 	self.queue <- job
 	job.Wait()
 }
 
 // Quit shuts down a workflow, closing each channel in sequence until
 // all go routines have stopped.
-func (self *Workflow) Quit() {
+func (self *workflow) Quit() {
 	close(self.queue)
 	<-self.done
 }
