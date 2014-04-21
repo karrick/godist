@@ -43,6 +43,7 @@ type Job interface {
 // implementation of Integrate for an example.
 type Task interface {
 	Perform() error
+	Error() error
 	Integrate() Job
 }
 

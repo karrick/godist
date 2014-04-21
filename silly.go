@@ -76,8 +76,14 @@ func (self *sillyJob) Wait() {
 // sillyTask is a concrete data type that demonstrates how to use
 // godist Workflow.
 type sillyTask struct {
+	err     error
 	job     *sillyJob
 	a, b, c int
+}
+
+// Error returns the error, if any, of a Task.
+func (self *sillyTask) Error() error {
+	return self.err
 }
 
 // Perform does the required computational load for a Task.

@@ -53,7 +53,11 @@ func NewBasicWorkflow(count int) *workflow {
 						continue
 					}
 					for _, task := range tasks {
-						toPerform <- task
+						if task.Error() == nil {
+							toPerform <- task
+						} else {
+							toIntegrate <- task
+						}
 					}
 				}
 				done <- true
@@ -70,11 +74,11 @@ func NewBasicWorkflow(count int) *workflow {
 		for index := 0; index < count; index++ {
 			go func() {
 				for task := range toPerform {
-					// NOTE: same behavior for error or not (??? change ???)
-					if err := task.Perform(); err != nil {
-						toIntegrate <- task
-						continue
-					}
+					// NOTE: even tasks that have
+					// resulted in errors must
+					// have their erroroneous
+					// results integrated...
+					task.Perform()
 					toIntegrate <- task
 				}
 				done <- true
