@@ -4,7 +4,7 @@ package godist
 // structure must provide in order to submit to the workflow.
 //
 // Parse is responsible for any processing on a Job after
-// initialization. It ought return nil if errors were encountered
+// initialization. It ought return nil if no errors were encountered
 // during parsing.
 //
 // Expand expands the Job structure into multiple Task structures, or
