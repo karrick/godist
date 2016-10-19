@@ -1,7 +1,7 @@
 package godist
 
-// Job interface represents the functionality that a concrete job data
-// structure must provide in order to submit to the workflow.
+// Job is the interface implemented by an object that is processed by
+// the godist work queue.
 //
 // Parse is responsible for any processing on a Job after
 // initialization. It ought return nil if no errors were encountered
